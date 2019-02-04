@@ -18,12 +18,14 @@ import org.saheb.util.EmailUtil;
 import org.saheb.util.Util;
 
 public class ServiceStatusImpl implements ServicesStatus {
-	private static final String GOOGLE_URI = "http://google.com";
-	private static final String GITHUB_URI = "https://github.com";
+	private static final String SALESFORCE_URI = "http://lti2-sboservices.thehartford.com/bi_sc_re_sfleads_svc/updateQuoteDetails";
+	private static final String GET_RATING_URI = "https://lti2-smallbizquote.thehartford.com/api/ratingService/getRating";
+	private static final String GET_PREMIUM_URI = "https://lti2-smallbizquote.thehartford.com/api/ratingService/getPremiumForOffering ";
 	private static final Map<String, String> serviceMap = new HashMap<>();
 	static {
-		serviceMap.put("GOOGLE", GOOGLE_URI);
-		serviceMap.put("GITHUB", GITHUB_URI);
+		serviceMap.put("SALESFORCE", SALESFORCE_URI);
+		serviceMap.put("GET_RATING", GET_RATING_URI);
+		serviceMap.put("GET_PREMIUM", GET_PREMIUM_URI);
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class ServiceStatusImpl implements ServicesStatus {
 			
 			serviceStatus = new ServiceStatus();
 			
-			String requestBody = Util.getStringFromFile("QuoteData.json");
+			String requestBody = Util.getJsonStrFromFile("QuoteData.json");
 			Response response = RestClient.getStatusPost(serviceURI, requestBody);
 			if(response != null && response.getStatus() >= 200 && response.getStatus() <= 226 && !response.toString().toLowerCase().contains("error")) {
 				serviceStatus.setServiceName(serviceName);
