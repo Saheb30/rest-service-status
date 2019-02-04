@@ -13,7 +13,9 @@ import javax.ws.rs.core.Response;
 
 import org.saheb.beans.ServiceStatus;
 import org.saheb.beans.ServiceStatusList;
+import org.saheb.client.RestClient;
 import org.saheb.util.EmailUtil;
+import org.saheb.util.Util;
 
 public class ServiceStatusImpl implements ServicesStatus {
 	private static final String GOOGLE_URI = "http://google.com";
@@ -33,11 +35,9 @@ public class ServiceStatusImpl implements ServicesStatus {
 			String serviceURI = entry.getValue();
 			
 			serviceStatus = new ServiceStatus();
-			Client client = ClientBuilder.newClient();
-			WebTarget webTarget = client.target(serviceURI);
 			
-			Invocation.Builder invocationBuilder =	webTarget.request(MediaType.APPLICATION_JSON);
-			Response response = invocationBuilder.get();
+			String requestBody = Util.getStringFromFile("QuoteData.json");
+			Response response = RestClient.getStatusPost(serviceURI, requestBody);
 			if(response != null && response.getStatus() >= 200 && response.getStatus() <= 226 && !response.toString().toLowerCase().contains("error")) {
 				serviceStatus.setServiceName(serviceName);
 				serviceStatus.setStatus(true);
